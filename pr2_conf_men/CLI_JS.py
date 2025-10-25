@@ -1,5 +1,9 @@
 import argparse
 import sys
+from operator import index
+
+import requests
+import json
 
 from HandlerErrors import HandlerErrors
 
@@ -20,8 +24,38 @@ class CLI_JS:
         print(f'Максимальная глубина: {self.params["max-deep"]}')
         print(f'Подстрока: {self.params["substring_name"]}')
 
+    def create_json(self, url):
+        url_content = url.text
+        content = json.loads(url_content)
+        return (content)
+
+    def info_npm(self, info_package:dict, jv):
+        info_package["package_name"] = ("npm")
+        info_package["url"] = ("https://registry.npmjs.org/react/18.2.0")
+        info_package["mode"] = ("remote")
+        info_package["version"] = (jv["version"])
+        info_package["max-deep"] = self.search_max_deep(jv)
+        print(info_package)
+
+    def search_max_deep(self, jv:dict, current_deep=0):
+        for k, v in jv.items():
+            if type(v) == dict:
+                current_deep+=1
+                self.search_max_deep(v, current_deep)
+        return current_deep
+
+    def all_info(self, jv:dict):
+            print(jv)
 
     def command_line(self):
+        name = "react/18.2.0"
+        npm_package = f"https://registry.npmjs.org/{name}"
+        url = requests.get(npm_package)
+        jv = self.create_json(url)
+        info_package = {"package_name":"", "url":"", "mode":"", "version":"", "max-deep":"", "substring_name":""}
+        self.info_npm(info_package, jv)
+        self.all_info(jv)
+
         he = HandlerErrors()
         params = {}
         parser = argparse.ArgumentParser(

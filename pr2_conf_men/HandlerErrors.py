@@ -8,7 +8,7 @@ class HandlerErrors():
         return url
 
     def check_name(self, name):
-        if name != "JS":
+        if name != "npm":
             raise ValueError("Error of name")
         return name
 
