@@ -25,9 +25,8 @@ class HandlerErrors():
         return version
 
     def check_graph_name(self, name):
-        pattern = r"[^ ]+\.[^ ]+"
-        if not re.match(pattern, name):
-            raise ValueError("Error of name")
+        if len(filter.strip()) == 0:
+            raise ValueError("Error of filter")
         return name
 
     def check_max_deep(self, max):

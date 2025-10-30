@@ -1,6 +1,7 @@
 import argparse
 import sys
 from operator import index
+from platform import version
 
 import requests
 import json
@@ -10,7 +11,6 @@ from HandlerErrors import HandlerErrors
 
 class CLI_JS:
 
-    # 1 этап
     def __init__(self):
         self.params = self.command_line()
         self.print_params()
@@ -48,14 +48,6 @@ class CLI_JS:
             print(jv)
 
     def command_line(self):
-        name = "react/18.2.0"
-        npm_package = f"https://registry.npmjs.org/{name}"
-        url = requests.get(npm_package)
-        jv = self.create_json(url)
-        info_package = {"package_name":"", "url":"", "mode":"", "version":"", "max-deep":"", "substring_name":""}
-        self.info_npm(info_package, jv)
-        self.all_info(jv)
-
         he = HandlerErrors()
         params = {}
         parser = argparse.ArgumentParser(
@@ -63,7 +55,15 @@ class CLI_JS:
         )
 
         argv_list = [argv for argv in sys.argv]
+        name = argv_list[10]
+        vers = argv_list[8]
         print(argv_list)
+        npm_package = f"https://registry.npmjs.org/{name}/{vers}"
+        url = requests.get(npm_package)
+        jv = self.create_json(url)
+        info_package = {"package_name":"", "url":"", "mode":"", "version":"", "max-deep":"", "substring_name":""}
+        # self.info_npm(info_package, jv)
+        self.all_info(jv)
 
         parser.add_argument("--package_name",
                             "-p",
@@ -86,7 +86,7 @@ class CLI_JS:
         parser.add_argument("--version",
                             "-v",
                             type=he.check_version,
-                            default='1.0.0',
+                            default="0.0.1",
                             help="JavaScript package name")
 
         parser.add_argument("--graph_name",
