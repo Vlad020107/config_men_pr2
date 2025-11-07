@@ -184,22 +184,6 @@ class CLI_JS:
         else:
             print("  Зависимостей не найдено")
 
-
-        print(f"\n=== Построение графа зависимостей ===")
-        graph = self.dfs_build_graph(
-            package=package_name,
-            version=version,
-            max_depth=self.params["max_deep"],
-            substring_filter=self.params["substring_name"],
-            mode="remote",
-            base_url=base_url
-        )
-        
-        print(f"\nГраф зависимостей (пакеты: {len(graph)}):")
-        for pkg, deps in graph.items():
-            if deps:
-                print(f"  {pkg} -> {', '.join(deps)}")
-
     def parse_test_repo(self, repo_path):
 
         try:
